@@ -26,11 +26,19 @@ void advance_lexer(Lexer *lexer) {
 }
 
 // Function to initialise a token.
-Token* init_token(const TType t, char* value) {
+Token* init_token(const TType t, const char* value) {
   // Allocating memory for a new token.
   Token* token = malloc(sizeof(Token));
   token->type = t;
-  token->value = value;
+  token->value = malloc(strlen(value) + 1);
+
+  if (token->value == NULL) {
+    printf("Lexer: Failed to allocate memory for token value.\n");
+    free(token);
+    exit(1);
+  }
+
+  strcpy(token->value, value);
 
   // Return the pointer that references the newly initialised token.
   return token;
@@ -44,17 +52,20 @@ Token* next_token(Lexer* lexer) {
         break;
 
       case '+':
+        advance_lexer(lexer);
         return init_token(T_OPERATOR, "+");
 
       case '-':
+        advance_lexer(lexer);
         return init_token(T_OPERATOR, "-");
 
       case '*':
+        advance_lexer(lexer);
         return init_token(T_OPERATOR, "*");
 
       case '/':
+        advance_lexer(lexer);
         return init_token(T_OPERATOR, "/");
-
 
       case '0':
       case '1':
@@ -78,14 +89,25 @@ Token* next_token(Lexer* lexer) {
 }
 
 Token* build_number(Lexer* lexer) {
+  size_t len = 0;
   size_t capacity = 16;
+
+  bool is_float = false;
   char* number_string = malloc(capacity * sizeof(char));
+  number_string[0] = lexer->current_char;
 
   advance_lexer(lexer);
 
-  while (lexer->current_char >= '0' && lexer->current_char <= '9')  {
-    const size_t len = strlen(lexer->input);
+  while (lexer->current_char >= '0' && lexer->current_char <= '9' || lexer->current_char == '.')  {
+    if (lexer->current_char == '.') {
+      if (is_float) {
+        printf("Lexer error: A number must not contain more than one .");
+        exit(1);
+      }
 
+      is_float = true;
+    }
+    len++;
     if (len >= capacity) {
       capacity += 10;
       number_string = realloc(number_string, capacity * sizeof(char));
@@ -96,9 +118,16 @@ Token* build_number(Lexer* lexer) {
     }
 
     number_string[len] = lexer->current_char;
+    advance_lexer(lexer);
   }
 
-  Token* token = init_token(T_INTEGER, number_string);
-  free(number_string);
-  return token;
+  if (is_float) {
+    Token* token = init_token(T_FLOAT, number_string);
+    free(number_string);
+    return token;
+  } else {
+    Token* token = init_token(T_INTEGER, number_string);
+    free(number_string);
+    return token;
+  }
 }

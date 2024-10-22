@@ -24,7 +24,7 @@ Lexer* init_lexer(const char* input);
 void advance_lexer(Lexer* lexer);
 
 Token* next_token(Lexer* lexer);
-Token* init_token(TType t, char* value);
+Token* init_token(TType t, const char* value);
 Token* build_number(Lexer* lexer);
 
 #endif //LEXER_H

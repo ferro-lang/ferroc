@@ -35,9 +35,15 @@ int main(const int argc, char** argv) {
   // Setting up the lexer.
   Lexer* lexer = init_lexer(source_code);
 
-  for (int i = 0; i < file_size; i++) {
-    next_token(lexer);
-  }
+ while (true) {
+   const Token* token = next_token(lexer);
+
+   if (token->type == T_EOF) {
+     break;
+   }
+
+   printf("%s(%d), ", token->value, token->type);
+ }
 
   // Clean up the memory.
   free(source_code);
