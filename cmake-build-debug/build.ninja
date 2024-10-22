@@ -99,6 +99,13 @@ build CMakeFiles/ferroc.dir/src/lexer.c.o: C_COMPILER__ferroc_unscanned_Debug /U
   OBJECT_DIR = CMakeFiles/ferroc.dir
   OBJECT_FILE_DIR = CMakeFiles/ferroc.dir/src
 
+build CMakeFiles/ferroc.dir/src/parser.c.o: C_COMPILER__ferroc_unscanned_Debug /Users/gurvirsinghbaraich/CLionProjects/ferroc/src/parser.c || cmake_object_order_depends_target_ferroc
+  DEP_FILE = CMakeFiles/ferroc.dir/src/parser.c.o.d
+  FLAGS = -g -std=gnu2x -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk -fcolor-diagnostics   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS
+  INCLUDES = -I/opt/homebrew/opt/llvm/include
+  OBJECT_DIR = CMakeFiles/ferroc.dir
+  OBJECT_FILE_DIR = CMakeFiles/ferroc.dir/src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target ferroc
@@ -107,7 +114,7 @@ build CMakeFiles/ferroc.dir/src/lexer.c.o: C_COMPILER__ferroc_unscanned_Debug /U
 #############################################
 # Link the executable ferroc
 
-build ferroc: C_EXECUTABLE_LINKER__ferroc_Debug CMakeFiles/ferroc.dir/src/main.c.o CMakeFiles/ferroc.dir/src/lexer.c.o
+build ferroc: C_EXECUTABLE_LINKER__ferroc_Debug CMakeFiles/ferroc.dir/src/main.c.o CMakeFiles/ferroc.dir/src/lexer.c.o CMakeFiles/ferroc.dir/src/parser.c.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.5.sdk
   OBJECT_DIR = CMakeFiles/ferroc.dir
   POST_BUILD = :

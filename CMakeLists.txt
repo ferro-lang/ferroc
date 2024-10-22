@@ -10,4 +10,6 @@ add_definitions(${LLVM_DEFINITIONS})
 add_executable(ferroc
         src/main.c
         src/lexer.c
-        include/lexer.h)
+        include/lexer.h
+        include/parser.h
+        src/parser.c)

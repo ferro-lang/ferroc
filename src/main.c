@@ -2,6 +2,45 @@
 #include <stdlib.h>
 
 #include "../include/lexer.h"
+#include "../include/parser.h"
+
+#include <stdio.h>
+
+char* make_indent(const int indent_size) {
+  char* indent = malloc(indent_size * sizeof(char));
+
+  for (int i =  0; i < indent_size; i++) {
+    indent[i] = ' ';
+  }
+
+  return indent;
+}
+
+// Helper function to print the AST in a readable format
+void print_ast(const Node* node, const int indent_size, const char* delimiter) {
+  // Asserting, whether node is valid
+  if (node == NULL) {
+    return;
+  }
+
+  switch (node->type) {
+    case NODE_NUMBER: {
+      printf("%s%s%s", make_indent(indent_size), node->token->value, delimiter);
+      break;
+    }
+
+    case NODE_BINARY_OPERATION: {
+      printf("BinaryOperation(\n");
+      print_ast(node->lnode, indent_size + 1, ",\n");
+      print_ast(node->rnode, indent_size + 1, "");
+      printf("\n)\n");
+    }
+
+    default:
+      printf("Formatter Error: Node beyond capabilities: %d!", node->type);
+      exit(1);
+  }
+}
 
 // Starting point for the compiler,
 // the following function would be automatically called, when the program executes.
@@ -34,16 +73,11 @@ int main(const int argc, char** argv) {
 
   // Setting up the lexer.
   Lexer* lexer = init_lexer(source_code);
+  Parser* parser = init_parser(lexer);
 
- while (true) {
-   const Token* token = next_token(lexer);
+  const Node* root = parse(parser);
+  print_ast(root, 1, "");
 
-   if (token->type == T_EOF) {
-     break;
-   }
-
-   printf("%s(%d), ", token->value, token->type);
- }
 
   // Clean up the memory.
   free(source_code);
